@@ -1,0 +1,128 @@
+body {
+    background-color: black;
+    width: 100vw;
+    color: #e4e4e4;
+    margin: 0 0;
+}
+hr { background-color: #707070; opacity: 0.38; margin: 0px;}
+
+#wrapper {
+    flex-direction: column;
+
+    margin-top: 48px;
+}
+#word { 
+    text-decoration: underline; 
+    text-decoration-color: #48eb94; 
+    text-underline-position: under;
+    font-size: 40px;
+    
+    margin-bottom: 5.1vh;
+}
+#lower {
+    flex-direction: column;
+    margin-bottom: 8vh;
+}
+#lower > div {
+    margin-bottom: 2.8vh;
+}
+#lower > div > div {
+    width: 54.2vw;
+    height: 19.6vh;
+    box-shadow: 0 4px 8px 0 #000000;
+    background-color: #262626b7;
+    border-radius: 8px;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+#lower > div > div > img {
+    height: 19.6vh;
+    width: 27.1%;
+}
+#lower > div > div > div {
+    width: calc(54.2vw - 27.1%);
+    padding: 10px;
+}
+#lower h2 {
+    margin: 0 0 2px 0;
+    font-size: 18px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.22;
+    letter-spacing: normal;
+    text-align: left;
+    color: #e4e4e4;
+    font-family: 'Roboto';
+}
+#lower h3 {
+    margin: 0 0 15px 0;
+    font-weight: 300;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.35;
+    letter-spacing: normal;
+    text-align: left;
+    font-size: 16px;
+    color: #e2e2e2;
+    font-family: 'SegoeUI';
+}
+#lower p {
+    font-size: 15px;
+    font-weight: 100;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.35;
+    letter-spacing: normal;
+    text-align: left;
+    color: #cacaca;
+    font-family: 'SegoeUI';
+}
+h2 {
+    color: white;
+    opacity: 1;
+    z-index: 1;
+}
+
+.flexible {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+input::placeholder {
+    font-family: Roboto;
+    font-size: 22px;
+  }
+
+#searchBarBox {
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+      }
+input:focus {
+    border-color: #707070;
+    outline: none;
+}
+
+#searchBar {
+    width: 487.1px;
+    height: 35px;
+    border-radius: 18px;
+    border-: solid 1px #707070;
+    background-color: #ffffff;
+}
+#searchInput {
+    text-align:center;
+    width: 487.1px;
+    height: 35px;
+    border-radius: 18px;
+    background-color: #2e2e2e;
+    color: #e4e4e4;
+}
+#icons {
+    filter: invert(1);
+}
