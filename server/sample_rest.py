@@ -5,12 +5,12 @@ from flask import Flask
 from flask import request
 from flask_restful import Resource, Api
 from flask_cors import CORS
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
 
 import googleapiclient.discovery
 import requests
+
+from skyscanner.skyscanner import Flights
+flights_service = Flights('jacobs-2019')
 
 
 app = Flask(__name__)
@@ -22,6 +22,8 @@ api = Api(app)
 @app.route("/next", methods=["POST"])
 def next():
     data = request.get_json()
+
+
     return json.dumps(data)
 
 
