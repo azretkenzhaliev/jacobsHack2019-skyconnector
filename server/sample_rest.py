@@ -29,18 +29,18 @@ def flight_info(country, currency, locale, originPlace, destinationPlace, outbou
             "api-key": "jacobs-2019"
         }
     )
+
     return response.json()
 
 
 @app.route("/next", methods=["POST"])
 def next():
-    # data = request.get_json()
+    data = request.get_json()
 
-    result = flight_info("DE", "EUR", "en-US", "PARI-sky", "STN-sky", "2019-11-20")
+    result = flight_info("DE", "EUR", "en-US", data["from"]+"-sky", data["to"]+"sky", data["date"])
     print(result)
-
-    return "haha"
-    #return json.dumps(data)
+    
+    return result
 
 
 if __name__ == '__main__':
