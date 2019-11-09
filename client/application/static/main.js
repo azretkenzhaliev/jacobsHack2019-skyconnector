@@ -2,7 +2,7 @@
 function postReq(searchQuery, nextPage){
     $.ajax({
         method: "POST",
-        url: "http://localhost:5000/next",
+        url: "http://192.168.43.108:5000/next",
         dataType: 'json',
         contentType: 'application/json',
         data: JSON.stringify({ query: searchQuery }),
@@ -24,7 +24,7 @@ document.getElementById("searchInput").addEventListener("keyup", function(event)
   }})
 
 function getReq(){
-    $.getJSON("http://localhost:5000", function(data) {
+    $.getJSON("http://192.168.43.108:5000", function(data) {
     console.log(data)
     });
 }
