@@ -127,7 +127,7 @@ function getFlightTicketsComponents(flightTickets) {
       <div style={inline_stub}>
         {flight["Price"] + " Euro"}
         <br/>
-        <BpkLink href='/#' onClick={() => authenticate(e, flight['DiscussionId'])}>{flight['DiscussionId']}</BpkLink>
+        <BpkLink href='#' onClick={(e) => authenticate(e, flight['DiscussionId'])}>{flight['DiscussionId']}</BpkLink>
       </div>
     );
 
