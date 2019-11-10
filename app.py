@@ -114,9 +114,6 @@ def next():
 @app.route('/chat', methods=["POST", "GET"])
 def chat():
     data = request.get_json()
-
-    #send to rabbitmq queues
-
     return jsonify("hi")
 
 # def process_queues():
