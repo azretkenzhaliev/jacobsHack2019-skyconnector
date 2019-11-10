@@ -50,7 +50,8 @@ class Authentication extends React.Component {
         }),
     })
     .then(response => response.json())
-    .then(data => this.updateFlightTickets(data));
+    .then(data => console.log(data));
+    //this.updateFlightTickets(data)
   }
 
   render () {

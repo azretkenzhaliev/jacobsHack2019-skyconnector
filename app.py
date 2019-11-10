@@ -109,10 +109,14 @@ def next():
 
     return json.dumps(processed_data)
 
+
 def sign_in(mongoEntries, email, password):
     query = {"email": email}
-    entry = mongoEntries.find(query)
-    if entry:
+
+    count = mongoEntries.count_documents(query)
+
+    if count > 0:
+        entry = mongoEntries.find_one(query)
         if password == entry["password"]:
             return "Sign in successful"
         else:
@@ -120,20 +124,24 @@ def sign_in(mongoEntries, email, password):
     else:
         return "Incorrect email"
 
+
 def sign_up(mongoEntries, email, password):
     query = {"email": email}
-    entry = mongoEntries.find(query)
-    if entry:
-        return "Already signed up. Please try to sign in"
-    
+
+    count = mongoEntries.count_documents(query)
+
+    if count > 0:
+        return "Already signed up. Please sign in"
+
     new_entry = {"email": email, "password": password}
-    res = mongoEntries.insert_one(new_entry)
+    mongoEntries.insert_one(new_entry)
+
     return "Sign up successful"
-    
+
 
 @app.route('/login', methods=["POST"])
 def login():
-    mongoclient = pymongo.MongoClient("mongodb://192.168.43.253:27017/")
+    mongoclient = pymongo.MongoClient("mongodb://0.0.0.0:27017/")
     mongoDB = mongoclient["mongodatabase"]
     mongoEntries = mongoDB["users"]
 
@@ -147,7 +155,7 @@ def login():
     elif flag == "sign-up":
         status = sign_up(mongoEntries, email, password)
     
-    return status
+    return jsonify(status)
 
 
 @app.route('/chat', methods=["POST", "GET"])
