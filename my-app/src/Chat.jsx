@@ -1,26 +1,79 @@
 import React from 'react';
 import BpkButton from 'bpk-component-button';
-import BpkRadio from 'bpk-component-radio';
 import BpkInput, { INPUT_TYPES, CLEAR_BUTTON_MODES } from 'bpk-component-input';
+import { BpkGridContainer, BpkGridRow, BpkGridColumn } from 'bpk-component-grid';
+import BpkText from "bpk-component-text";
 
-const inline_left = {
-  margin: '20px',
-  marginLeft: '15%',
+
+const inline = {
   display: 'inline-block',
 };
+
+const left = {
+  marginLeft: 250,
+  marginBottom: 50,
+};
+
+const right = {
+  marginLeft: 900,
+  marginBottom: 50,
+};
+
+function getOther (msg) {
+  return (
+    <BpkGridRow>
+      <BpkGridColumn width={1}></BpkGridColumn>
+      <BpkGridColumn width={7}>
+        {msg}
+      </BpkGridColumn>
+      <BpkGridColumn width={4}></BpkGridColumn>
+    </BpkGridRow>
+  )
+}
+
+function getSelf (msg) {
+  return (
+    <BpkGridRow>
+      <BpkGridColumn width={19}></BpkGridColumn>
+      <BpkGridColumn width={2}>
+        {msg}
+      </BpkGridColumn>
+      <BpkGridColumn width={1}></BpkGridColumn>
+    </BpkGridRow>
+  )
+}
+
+function getMessages (data) {
+  let rows = [];
+  for (let key in data){
+    let msg = data["UserId"]+": "+data["Message"];
+    if (data["UserId"] == window.user_email){
+      rows.push(getSelf(msg));
+    }else{
+      rows.push(getOther(msg));
+    }
+  }
+  return <BpkGridContainer>{rows}</BpkGridContainer>;
+}
 
 class Chat extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
-      password: "",
-      radio: "signup",
+      message: "",
+      messages: null,
     };
   }
 
-  getMessages (data) {
-    console.log("YAY");
+  componentDidMount() {
+    this.setState({
+      messages: null,
+    })
+  }
+
+  updateMessages(data) {
+    this.setState({messages: getMessages(data)});
+    return 1
   }
 
   get_messages () {
@@ -35,12 +88,12 @@ class Chat extends React.Component {
         }),
     })
     .then(response => response.json())
-    .then(data => console.log(data));
+    .then(data => this.updateMessages(data));
 
     return 0;
   }
 
-  post_message(msg) {
+  post_message() {
     fetch('http://localhost:5000/chat', {
         method: "POST",
         headers: {
@@ -49,57 +102,38 @@ class Chat extends React.Component {
         body: JSON.stringify({
           "UserId": window.user_email,
           "DiscussionId": window.discussion_id,
-          "Message": msg,
+          "Message": this.state.message,
         }),
     })
     .then(response => response.json())
-    .then(data => console.log(data));
+    .then(data => this.get_messages());
 
     return 0;
   }
 
   i = this.get_messages();
-  j = this.post_message("Hi there!");
-
-  handleRadioChange (e) {
-    if (e.target.id == "signup"){
-      this.setState({radio: "signup"})
-    }else{
-      this.setState({radio: "login"})
-    }
-  }
 
   handleChange (e) {
-    if (e.target.id == "email") this.setState({email: e.target.value});
-    if (e.target.id == "password") this.setState({password: e.target.value});
-  }
-
-  handleClickClear (e) {
-    if (e == "email") this.setState({originValue: ''});
-    if (e == "password") this.setState({destinationValue: ''});
-  }
-
-  handleSubmit () {
-    fetch('http://localhost:5000/login', {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          "email": this.state.email,
-          "password": this.state.password,
-          "flag": this.state.radio == "signup" ? "sign-up" : "sign-in"
-        }),
-    })
-    .then(response => response.json())
-    .then(data => this.handleAuthentication(data));
-    //this.updateFlightTickets(data)
+    this.setState({message: e.target.value})
   }
 
   render () {
     return (
       <div>
-        <h1>Azretuwkaaa</h1>
+        {this.state.messages}
+        <div style={inline}>
+          <BpkInput
+            id="msg"
+            type={INPUT_TYPES.text}
+            name="msg"
+            value={this.state.message}
+            onChange={(e) => {this.handleChange(e)}}
+            placeholder="Message"
+          />
+        </div>
+        <div style={inline}>
+          <BpkButton featured={true} onClick={this.post_message.bind(this)}>Send</BpkButton>
+        </div>
       </div>
     );
   }

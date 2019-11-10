@@ -24,6 +24,7 @@
     "bpk-component-button": "*",
     "bpk-component-code": "*",
     "bpk-component-datepicker": "*",
+    "bpk-component-grid": "*",
     "bpk-component-icon": "*",
     "bpk-component-input": "*",
     "bpk-component-link": "*",
