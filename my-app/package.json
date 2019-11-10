@@ -21,7 +21,9 @@
   ],
   "devDependencies": {
     "bpk-component-button": "*",
+    "bpk-component-loading-button": "*",
     "bpk-component-code": "*",
+    "bpk-component-datepicker": "*",
     "bpk-component-input": "*",
     "bpk-component-text": "*",
     "bpk-mixins": "*",

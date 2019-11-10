@@ -55,8 +55,10 @@ def find_carrier_by_id(carrier_id, carriers):
 def next():
     data = request.get_json()
 
-    result = flight_info("DE", "EUR", "en-US", data["from"] + "-sky", data["to"] + "-sky", data["date"])
+    print(data)
 
+    result = flight_info("DE", "EUR", "en-US", data["from"] + "-sky", data["to"] + "-sky", data["date"])
+    print(result)
     processed_data = {}
     len_data = 0
 
