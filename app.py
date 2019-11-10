@@ -165,7 +165,7 @@ def sign_up(mongoEntries, email, password):
 
 @app.route('/login', methods=["POST"])
 def login():
-    mongoclient = pymongo.MongoClient("mongodb://0.0.0.0:27017/")
+    mongoclient = pymongo.MongoClient("mongodb://localhost:27017/")
     mongoDB = mongoclient["mongodatabase"]
     mongoEntries = mongoDB["users"]
 
@@ -182,10 +182,6 @@ def login():
     return jsonify(status)
 
 
-def bitstring_to_bytes(s):
-    return int(s, 2).to_bytes(len(s) // 8, byteorder='big')
-
-
 @app.route('/chat', methods=["POST"])
 def chat():
     data = request.get_json()
@@ -199,20 +195,34 @@ def chat():
         pre_message = data["Message"]
         message = str.encode(pre_message)
 
+        print("That's me")
+
         producer = KafkaProducer()
         producer.send(discussion_id, message, user_id)
 
-    consumer = KafkaConsumer(discussion_id)
+    consumer = KafkaConsumer(
+        discussion_id,
+        consumer_timeout_ms=50,
+        request_timeout_ms=50,
+        fetch_max_wait_ms=40,
+        auto_offset_reset='earliest'
+    )
+    print(consumer)
 
     messages = []
 
     for msg in consumer:
+        print(msg)
         messages.append(
             {
-                "user": msg.key,
-                "message": msg.value
+                "user": bytes.decode(msg.key),
+                "message": bytes.decode(msg.value)
             }
         )
+        print(messages)
+
+    print("Hello! Finished!")
+
     return json.dumps(messages)
 
 

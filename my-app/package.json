@@ -22,6 +22,7 @@
   ],
   "devDependencies": {
     "bpk-component-button": "*",
+    "bpk-component-card": "^2.0.17",
     "bpk-component-code": "*",
     "bpk-component-datepicker": "*",
     "bpk-component-grid": "*",
