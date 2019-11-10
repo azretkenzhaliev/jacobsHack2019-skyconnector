@@ -9,6 +9,8 @@ from flask_cors import CORS
 import googleapiclient.discovery
 import requests
 
+import pika
+
 
 app = Flask(__name__)
 CORS(app)
@@ -39,9 +41,18 @@ def next():
 
     result = flight_info("DE", "EUR", "en-US", data["from"]+"-sky", data["to"]+"sky", data["date"])
     print(result)
-    
+
     return result
 
+@app.route('/chat', methods["POST", "GET"])
+def chat():
+    data = request.get_json()
+
+    #send to rabbitmq queues
+
+    return "hi"
+
+def process_queues():
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
