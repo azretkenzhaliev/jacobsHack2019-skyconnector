@@ -1,11 +1,12 @@
 import React from 'react';
-import { BpkCode } from 'bpk-component-code';
 import BpkLoadingButton from 'bpk-component-loading-button';
+import BpkLargeFlightIcon from 'bpk-component-icon/lg/flight';
 import BpkText from 'bpk-component-text';
+import BpkLink from 'bpk-component-link';
 import BpkDatepicker from 'bpk-component-datepicker';
 import format from 'date-fns/format';
 import BpkInput, { INPUT_TYPES, CLEAR_BUTTON_MODES } from 'bpk-component-input';
-
+import BpkTicket from 'bpk-component-ticket';
 import STYLES from './App.scss';
 
 const c = className => STYLES[className] || 'UNKNOWN';
@@ -39,6 +40,7 @@ const c = className => STYLES[className] || 'UNKNOWN';
 const formatDate = date => format(date, 'YYYY-MM-DD');
 const formatDateFull = date => format(date, 'dddd, Do MMMM YYYY');
 const formatMonth = date => format(date, 'MMMM YYYY');
+const formatTime = date => format(date, 'hh:mm');
 const daysOfWeek = [
   {
     name: 'Sunday',
@@ -84,6 +86,73 @@ const daysOfWeek = [
   },
 ];
 
+const inline_left = {
+  margin: '20px',
+  marginLeft: '15%',
+  display: 'inline-block',
+};
+
+const inline_center = {
+  margin: '20px',
+  marginLeft: '20%',
+  marginRight: '20%',
+  display: 'inline-block',
+};
+
+const inline_right = {
+  margin: '20px',
+  marginRight: '15%',
+  display: 'inline-block',
+};
+
+const inline_stub = {
+  marginTop: '20px',
+};
+
+function authenticate(e) {
+  console.log(e);
+}
+
+function getFlightTicketsComponents(flightTickets) {
+  let rows = [];
+  for (let key in flightTickets){
+    let flight = flightTickets[key];
+    let destinationTime = Date.parse(flight["FlightDateTime"]);
+    let duration = Date.parse(flight["FlightDateTime"]) - Date.parse(flight["FlightDateTime"]);
+    let href = "./authenticate/" + flight['DiscussionId'];
+    let stub = (
+      <div style={inline_stub}>
+        {flight["Price"] + " Euro"}
+        <br/>
+        <BpkLink href={href}>{flight['DiscussionId']}</BpkLink>
+      </div>
+    );
+
+    rows.push(
+      <div>
+        <br/>
+        <BpkTicket stub={stub}>
+          <div style={inline_left}>
+            <BpkText>{flight["IataFrom"]}</BpkText>
+            <br/>
+            <BpkText>{formatTime(destinationTime)}</BpkText>
+          </div>
+          <div style={inline_center}>
+            <BpkText>{formatTime(duration)}</BpkText>
+            <br/>
+            <BpkLargeFlightIcon className="abc-icon__flight" />
+          </div>
+          <div style={inline_right}>
+            <BpkText>{flight["IataTo"]}</BpkText>
+            <br/>
+            <BpkText>{formatTime(destinationTime)}</BpkText>
+          </div>
+        </BpkTicket>
+      </div>
+    );
+  }
+  return <div>{rows}</div>;
+}
 
 class FlightForm extends React.Component {
   constructor(props) {
@@ -92,7 +161,12 @@ class FlightForm extends React.Component {
       originValue: "",
       destinationValue: "",
       selectedDate: null,
+      flightTickets: null,
     };
+  }
+
+  updateFlightTickets(flightTickets){
+    this.setState({flightTickets: getFlightTicketsComponents(flightTickets)})
   }
 
   handleChange (e) {
@@ -124,7 +198,7 @@ class FlightForm extends React.Component {
         }),
     })
     .then(response => response.json())
-    .then(data => console.log(data));
+    .then(data => this.updateFlightTickets(data));
   }
 
   render () {
@@ -169,6 +243,7 @@ class FlightForm extends React.Component {
         <BpkLoadingButton iconOnly onClick={this.handleSubmit.bind(this)}>
           <span className="visually-hidden">Search Flights</span>
         </BpkLoadingButton>
+        {this.state.flightTickets}
       </div>
     )
   }
