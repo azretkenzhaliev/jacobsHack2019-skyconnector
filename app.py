@@ -5,6 +5,8 @@ from flask import Flask
 from flask import request, jsonify
 from flask_restful import Resource, Api
 from flask_cors import CORS
+from kafka import KafkaConsumer
+from kafka import KafkaProducer
 
 import googleapiclient.discovery
 import requests
@@ -108,6 +110,8 @@ def next():
         carrier_ids = legs[i]["Carriers"]
         carrier_name = find_carrier_by_id(carrier_ids[0], carriers)
         discussion_id += "-" + carrier_name
+        discussion_id = discussion_id.replace(":", '-')
+        discussion_id = discussion_id.replace(" ", '-')
 
         for itenerary in iteneraries:
             if itenerary["OutboundLegId"] == legs[i]["Id"]:
@@ -138,7 +142,7 @@ def sign_in(mongoEntries, email, password):
     if count > 0:
         entry = mongoEntries.find_one(query)
         if password == entry["password"]:
-            return "Sign in successful"
+            return "successful"
         else:
             return "Incorrect password"
     else:
@@ -156,7 +160,7 @@ def sign_up(mongoEntries, email, password):
     new_entry = {"email": email, "password": password}
     mongoEntries.insert_one(new_entry)
 
-    return "Sign up successful"
+    return "successful"
 
 
 @app.route('/login', methods=["POST"])
@@ -178,12 +182,39 @@ def login():
     return jsonify(status)
 
 
-@app.route('/chat', methods=["POST", "GET"])
+def bitstring_to_bytes(s):
+    return int(s, 2).to_bytes(len(s) // 8, byteorder='big')
+
+
+@app.route('/chat', methods=["POST"])
 def chat():
     data = request.get_json()
-    return jsonify("hi")
 
-# def process_queues():
+    discussion_id = data["DiscussionId"]
+    pre_user_id = data["UserId"]
+
+    user_id = str.encode(pre_user_id)
+
+    if "Message" in data:
+        pre_message = data["Message"]
+        message = str.encode(pre_message)
+
+        producer = KafkaProducer()
+        producer.send(discussion_id, message, user_id)
+
+    consumer = KafkaConsumer(discussion_id)
+
+    messages = []
+
+    for msg in consumer:
+        messages.append(
+            {
+                "user": msg.key,
+                "message": msg.value
+            }
+        )
+    return json.dumps(messages)
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

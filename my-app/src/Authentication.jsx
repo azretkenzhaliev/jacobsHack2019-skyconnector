@@ -8,6 +8,8 @@ import { BpkGridContainer, BpkGridRow, BpkGridColumn } from 'bpk-component-grid'
 import STYLES from './Authentication.scss';
 const c = className => STYLES[className] || 'UNKNOWN';
 const id = id => STYLES[id] || "UNKNOWN";
+import ReactDOM from "react-dom";
+import Chat from "./Chat";
 
 const inline_left = {
   margin: '20px',
@@ -23,6 +25,13 @@ class Authentication extends React.Component {
       password: "",
       radio: "signup",
     };
+  }
+
+  handleAuthentication (msg) {
+    if (msg == "successful"){
+      window.user_email = this.state.email;
+      ReactDOM.render(React.createElement(Chat), document.getElementById('root'));
+    }
   }
 
   handleRadioChange (e) {
@@ -56,7 +65,7 @@ class Authentication extends React.Component {
         }),
     })
     .then(response => response.json())
-    .then(data => console.log(data));
+    .then(data => this.handleAuthentication(data));
     //this.updateFlightTickets(data)
   }
 

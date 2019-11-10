@@ -1,0 +1,33 @@
+@import '~bpk-mixins';
+
+@mixin container {
+  max-width: $bpk-breakpoint-desktop;
+  margin: 0 auto;
+}
+
+.Authentication {
+    text-align: center;
+
+    &__BpkCard {
+        margin-top: 10em;
+        width: 35%;
+        margin-left: 30em;
+    }
+
+    &__BpkInput {
+        padding: $bpk-spacing-sm;
+        width: 100%;
+      }
+
+    &__BpkRadio {
+        margin-top: $bpk-spacing-xxl;
+        margin-left: 15em;
+    }
+
+    &__BpkButton {
+        margin-top: $bpk-spacing-sm;
+        padding: $bpk-spacing-sm;
+        margin-left: 8.5em;
+        width: 30%;
+      }
+}
