@@ -233,7 +233,6 @@ class FlightForm extends React.Component {
         <BpkDatepicker
           id="datepicker"
           className={c("App__BpkDatepicker")}
-          style = {{marginLeft: 20em}}
           daysOfWeek={daysOfWeek}
           weekStartsOn={1}
           changeMonthLabel="Change month"
