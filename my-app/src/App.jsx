@@ -112,9 +112,8 @@ const inline_stub = {
 };
 
 function authenticate(e, discussion_id) {
-  console.log(e);
-  console.log(discussion_id);
   ReactDOM.render(React.createElement(Authentication), document.getElementById('root'));
+  window.discussion_id = discussion_id;
 }
 
 function getFlightTicketsComponents(flightTickets) {

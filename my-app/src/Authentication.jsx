@@ -2,6 +2,8 @@ import React from 'react';
 import BpkButton from 'bpk-component-button';
 import BpkRadio from 'bpk-component-radio';
 import BpkInput, { INPUT_TYPES, CLEAR_BUTTON_MODES } from 'bpk-component-input';
+import ReactDOM from "react-dom";
+import Chat from "./Chat";
 
 const inline_left = {
   margin: '20px',
@@ -17,6 +19,13 @@ class Authentication extends React.Component {
       password: "",
       radio: "signup",
     };
+  }
+
+  handleAuthentication (msg) {
+    if (msg == "successful"){
+      window.user = this.state.email;
+      ReactDOM.render(React.createElement(Chat), document.getElementById('root'));
+    }
   }
 
   handleRadioChange (e) {
@@ -50,7 +59,7 @@ class Authentication extends React.Component {
         }),
     })
     .then(response => response.json())
-    .then(data => console.log(data));
+    .then(data => this.handleAuthentication(data));
     //this.updateFlightTickets(data)
   }
 

@@ -138,7 +138,7 @@ def sign_in(mongoEntries, email, password):
     if count > 0:
         entry = mongoEntries.find_one(query)
         if password == entry["password"]:
-            return "Sign in successful"
+            return "successful"
         else:
             return "Incorrect password"
     else:
@@ -156,7 +156,7 @@ def sign_up(mongoEntries, email, password):
     new_entry = {"email": email, "password": password}
     mongoEntries.insert_one(new_entry)
 
-    return "Sign up successful"
+    return "successful"
 
 
 @app.route('/login', methods=["POST"])
