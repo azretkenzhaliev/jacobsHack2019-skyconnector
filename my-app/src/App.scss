@@ -42,4 +42,20 @@
   &__text {
     margin-bottom: $bpk-spacing-sm;
   }
+
+  &__BpkInput {
+    margin-top: $bpk-spacing-sm;
+    padding: $bpk-spacing-sm;
+    width: 23%;
+  }
+
+  &__BpkLoadingButton {
+    padding: $bpk-spacing-sm;
+  }
+
+  &__BpkDatepicker {
+    margin-top: $bpk-spacing-sm;
+    padding: $bpk-spacing-sm;
+    margin-left: 20em;
+  }
 }

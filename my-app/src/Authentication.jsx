@@ -2,6 +2,12 @@ import React from 'react';
 import BpkButton from 'bpk-component-button';
 import BpkRadio from 'bpk-component-radio';
 import BpkInput, { INPUT_TYPES, CLEAR_BUTTON_MODES } from 'bpk-component-input';
+import BpkCard from 'bpk-component-card';
+import { BpkGridContainer, BpkGridRow, BpkGridColumn } from 'bpk-component-grid';
+
+import STYLES from './Authentication.scss';
+const c = className => STYLES[className] || 'UNKNOWN';
+const id = id => STYLES[id] || "UNKNOWN";
 import ReactDOM from "react-dom";
 import Chat from "./Chat";
 
@@ -66,45 +72,64 @@ class Authentication extends React.Component {
   render () {
     return (
       <div>
-        <div>
-          <BpkRadio
-            id="signup"
-            name="authentication"
-            label="Sign Up"
-            onChange={(e) => (this.handleRadioChange(e))}
-            checked={this.state.radio == "signup"}
+        <BpkGridContainer>
+          <BpkGridRow>
+            <BpkGridColumn width={6} tabletWidth={12}>
+              <BpkRadio
+                id="signup"
+                className={c('Authentication__BpkRadio')}
+                name="authentication"
+                label="Sign Up"
+                onChange={(e) => (this.handleRadioChange(e))}
+                checked={this.state.radio == "signup"}
+              />
+            </BpkGridColumn>
+            <BpkGridColumn width={6} tabletWidth={12}>
+              <BpkRadio
+                id="login"
+                className={c('Authentication__BpkRadio')}
+                name="authentication"
+                label="Log In"
+                onChange={(e) => this.handleRadioChange(e)}
+                checked={this.state.radio == "login"}
+              />
+            </BpkGridColumn>
+          </BpkGridRow>
+        </BpkGridContainer>
+        <BpkCard className={c('Authentication__BpkCard')}>
+          <BpkInput
+            id="email"
+            className={c('Authentication__BpkInput')}
+            type={INPUT_TYPES.email}
+            name="email"
+            value={this.state.email}
+            onChange={(e) => {this.handleChange(e)}}
+            placeholder="Email: "
+            clearButtonMode={CLEAR_BUTTON_MODES.whileEditing}
+            clearButtonLabel="Clear"
+            onClear={() => {this.handleClickClear("origin")}}
           />
-          <BpkRadio
-            id="login"
-            name="authentication"
-            label="Log In"
-            onChange={(e) => this.handleRadioChange(e)}
-            checked={this.state.radio == "login"}
+          <br/>
+          <BpkInput
+            id="password"
+            className={c('Authentication__BpkInput')}
+            type={INPUT_TYPES.password}
+            name="password"
+            value={this.state.password}
+            onChange={(e) => {this.handleChange(e)}}
+            placeholder="Password: "
+            clearButtonMode={CLEAR_BUTTON_MODES.whileEditing}
+            clearButtonLabel="Clear"
+            onClear={() => {this.handleClickClear("origin")}}
           />
-        </div>
-        <BpkInput
-          id="email"
-          type={INPUT_TYPES.email}
-          name="email"
-          value={this.state.email}
-          onChange={(e) => {this.handleChange(e)}}
-          placeholder="Email: "
-          clearButtonMode={CLEAR_BUTTON_MODES.whileEditing}
-          clearButtonLabel="Clear"
-          onClear={() => {this.handleClickClear("origin")}}
-        />
-        <BpkInput
-          id="password"
-          type={INPUT_TYPES.password}
-          name="password"
-          value={this.state.password}
-          onChange={(e) => {this.handleChange(e)}}
-          placeholder="Password: "
-          clearButtonMode={CLEAR_BUTTON_MODES.whileEditing}
-          clearButtonLabel="Clear"
-          onClear={() => {this.handleClickClear("origin")}}
-        />
-        <BpkButton featured={true} onClick={this.handleSubmit.bind(this)}>Enter</BpkButton>
+          <br/>
+          <BpkButton 
+          className={c('Authentication__BpkButton')}
+          featured={true} 
+          onClick={this.handleSubmit.bind(this)}>
+            Enter
+          </BpkButton>
+        </BpkCard>
       </div>
     );
   }
