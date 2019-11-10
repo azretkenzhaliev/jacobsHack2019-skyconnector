@@ -19,6 +19,10 @@ class Chat extends React.Component {
     };
   }
 
+  getMessages (data) {
+    
+  }
+
   get_messages () {
     fetch('http://localhost:5000/login', {
         method: "GET",
@@ -31,8 +35,7 @@ class Chat extends React.Component {
         }),
     })
     .then(response => response.json())
-    .then(data => this.handleAuthentication(data));
-    //this.updateFlightTickets(data)
+    .then(data => this.getMessages(data));
   }
 
   handleRadioChange (e) {
