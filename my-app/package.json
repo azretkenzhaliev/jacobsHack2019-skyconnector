@@ -5,7 +5,8 @@
   "dependencies": {
     "backpack-react-scripts": "7.0.2",
     "react": "16.4.2",
-    "react-dom": "16.4.2"
+    "react-dom": "16.4.2",
+    "react-router": "^5.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -21,11 +22,15 @@
   ],
   "devDependencies": {
     "bpk-component-button": "*",
-    "bpk-component-loading-button": "*",
     "bpk-component-code": "*",
     "bpk-component-datepicker": "*",
+    "bpk-component-icon": "*",
     "bpk-component-input": "*",
+    "bpk-component-link": "*",
+    "bpk-component-loading-button": "*",
+    "bpk-component-radio": "*",
     "bpk-component-text": "*",
+    "bpk-component-ticket": "*",
     "bpk-mixins": "*",
     "bpk-stylesheets": "*"
   }
