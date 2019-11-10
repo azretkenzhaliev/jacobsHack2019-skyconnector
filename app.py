@@ -10,6 +10,7 @@ import googleapiclient.discovery
 import requests
 
 import pika
+import pymongo
 
 
 app = Flask(__name__)
@@ -18,34 +19,55 @@ CORS(app)
 api = Api(app)
 
 
-def flight_info(country, currency, locale, originPlace, destinationPlace, outboundPartialDate):
+def flight_info(country: str, currency: str, locale: str, originPlace: str, destinationPlace: str, outboundDate: str):    
+    body = {
+        "country": country, 
+        "currency": currency, 
+        "locale": locale,
+        "originPlace": originPlace,
+        "destinationPlace": destinationPlace,
+        "locationSchema": "iata",
+        "outboundDate": outboundDate,
+        "adults": 1
+    }
+    
+    session = requests.post(
+        "https://www.skyscanner.net/g/chiron/api/v1/flights/search/pricing/v1.0",
+        json.dumps(body),
+        headers={
+            "Content-Type": "application/x-www-form-urlencoded",
+            "api-key": "jacobs-2019",
+            "X-Forwarded-For": "212.201.44.243",
+            "Accept": "application/json"
+        }
+    )
+
+    SessionKey = session.json()["session_id"]
+
     response = requests.get(
         (
-            f"https://www.skyscanner.net/g/chiron/api/v1/flights/browse/browseroutes/v1.0/{country}/{currency}/{locale}/"
-            f"{originPlace}/"
-            f"{destinationPlace}/"
-            f"{outboundPartialDate}"
+            f"https://www.skyscanner.net/g/chiron/api/v1/flights/search/pricing/v1.0?"
+            f"session_id={SessionKey}"
         ),
         headers={
             "Accept": "application/json",
             "api-key": "jacobs-2019"
         }
     )
-
     return response.json()
 
 
 def find_place_by_id(place_id, places):
     for place in places:
-        if place_id == place["PlaceId"]:
-            return place["IataCode"]
+        if place_id == place["Id"]:
+            return place["Code"]
 
     return ""
 
 
 def find_carrier_by_id(carrier_id, carriers):
     for carrier in carriers:
-        if carrier_id == carrier["CarrierId"]:
+        if carrier_id == carrier["Id"]:
             return carrier["Name"]
 
     return ""
@@ -55,60 +77,97 @@ def find_carrier_by_id(carrier_id, carriers):
 def next():
     data = request.get_json()
 
-    print(data)
-
     result = flight_info("DE", "EUR", "en-US", data["from"] + "-sky", data["to"] + "-sky", data["date"])
-    print(result)
     processed_data = {}
     len_data = 0
 
-    quotes = result["Quotes"]
+    
+    legs = result["Legs"]
     places = result["Places"]
     carriers = result["Carriers"]
+    iteneraries = result["Itineraries"]
 
-    for i in range(len(quotes)):
-        if not quotes[i]["Direct"]:
+    for i in range(len(legs)):
+        if legs[i]["Stops"]:
             continue
 
         discussion_id = ""
 
-        outbound_leg = quotes[i]["OutboundLeg"]
-
-        iata_from = find_place_by_id(outbound_leg["OriginId"], places)
-        iata_to = find_place_by_id(outbound_leg["DestinationId"], places)
+        iata_from = find_place_by_id(legs[i]["OriginStation"], places)
+        iata_to = find_place_by_id(legs[i]["DestinationStation"], places)
 
         discussion_id += iata_from
         discussion_id += "-" + iata_to
 
-        carrier_ids = outbound_leg["CarrierIds"]
+        departure_time = legs[i]["Departure"]
+        arrival_time = legs[i]["Arrival"]
+        duration = legs[i]["Duration"]
+        discussion_id += "-" + departure_time
+        discussion_id += "-" + arrival_time
 
-        carrier_names = []
+        carrier_ids = legs[i]["Carriers"]
+        carrier_name = find_carrier_by_id(carrier_ids[0], carriers)
+        discussion_id += "-" + carrier_name
 
-        for carrier_id in carrier_ids:
-            carrier_name = find_carrier_by_id(carrier_id, carriers)
-
-            discussion_id += "-" + carrier_name
-            carrier_names.append(carrier_name)
-
-        assert len(carrier_names) == 1
-
-        quote_date_time = quotes[i]["QuoteDateTime"]
-        discussion_id += "-" + quote_date_time
-
-        price = quotes[i]["MinPrice"]
+        for itenerary in iteneraries:
+            if itenerary["OutboundLegId"] == legs[i]["Id"]:
+                price = itenerary["PricingOptions"][0]["Price"]
+                break
 
         processed_data[len_data] = {
             "IataFrom": iata_from,
             "IataTo": iata_to,
-            "CarrierName": carrier_names[0],
+            "CarrierName": carrier_name,
             "Price": price,
-            "DiscussionId": discussion_id,
-            "FlightDateTime": quote_date_time
+            "DepartureTime": departure_time,
+            "ArrivalTime": arrival_time,
+            "Duration": duration,
+            "DiscussionId": discussion_id
         }
 
         len_data += 1
 
     return json.dumps(processed_data)
+
+def sign_in(mongoEntries, email, password):
+    query = {"email": email}
+    entry = mongoEntries.find(query)
+    if entry:
+        if password == entry["password"]:
+            return "Sign in successful"
+        else:
+            return "Incorrect password"
+    else:
+        return "Incorrect email"
+
+def sign_up(mongoEntries, email, password):
+    query = {"email": email}
+    entry = mongoEntries.find(query)
+    if entry:
+        return "Already signed up. Please try to sign in"
+    
+    new_entry = {"email": email, "password": password}
+    res = mongoEntries.insert_one(new_entry)
+    return "Sign up successful"
+    
+
+@app.route('/login', methods=["POST"])
+def login():
+    mongoclient = pymongo.MongoClient("mongodb://192.168.43.253:27017/")
+    mongoDB = mongoclient["mongodatabase"]
+    mongoEntries = mongoDB["users"]
+
+    data = request.get_json()
+    email = data["email"]
+    password = data["password"]
+    flag = data["flag"] #sign-in or sign-up
+
+    if flag == "sign-in":
+        status = sign_in(mongoEntries, email, password)
+    elif flag == "sign-up":
+        status = sign_up(mongoEntries, email, password)
+    
+    return jsonify(status)
 
 
 @app.route('/chat', methods=["POST", "GET"])
