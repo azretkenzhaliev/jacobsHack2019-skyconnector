@@ -20,23 +20,46 @@ class Chat extends React.Component {
   }
 
   getMessages (data) {
-    
+    console.log("YAY");
   }
 
   get_messages () {
-    fetch('http://localhost:5000/login', {
-        method: "GET",
+    fetch('http://localhost:5000/chat', {
+        method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          "UserId": this.state.email,
-          "DiscussionId": this.state.password,
+          "UserId": window.user_email,
+          "DiscussionId": window.discussion_id,
         }),
     })
     .then(response => response.json())
-    .then(data => this.getMessages(data));
+    .then(data => console.log(data));
+
+    return 0;
   }
+
+  post_message(msg) {
+    fetch('http://localhost:5000/chat', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          "UserId": window.user_email,
+          "DiscussionId": window.discussion_id,
+          "Message": msg,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => console.log(data));
+
+    return 0;
+  }
+
+  i = this.get_messages();
+  j = this.post_message("Hi there!");
 
   handleRadioChange (e) {
     if (e.target.id == "signup"){

@@ -23,7 +23,7 @@ class Authentication extends React.Component {
 
   handleAuthentication (msg) {
     if (msg == "successful"){
-      window.user = this.state.email;
+      window.user_email = this.state.email;
       ReactDOM.render(React.createElement(Chat), document.getElementById('root'));
     }
   }

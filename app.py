@@ -110,6 +110,8 @@ def next():
         carrier_ids = legs[i]["Carriers"]
         carrier_name = find_carrier_by_id(carrier_ids[0], carriers)
         discussion_id += "-" + carrier_name
+        discussion_id = discussion_id.replace(":", '-')
+        discussion_id = discussion_id.replace(" ", '-')
 
         for itenerary in iteneraries:
             if itenerary["OutboundLegId"] == legs[i]["Id"]:
@@ -180,15 +182,22 @@ def login():
     return jsonify(status)
 
 
-@app.route('/chat', methods=["POST", "GET"])
+def bitstring_to_bytes(s):
+    return int(s, 2).to_bytes(len(s) // 8, byteorder='big')
+
+
+@app.route('/chat', methods=["POST"])
 def chat():
     data = request.get_json()
 
     discussion_id = data["DiscussionId"]
-    user_id = data["UserId"]
+    pre_user_id = data["UserId"]
 
-    if request.method == "POST":
-        message = data["Message"]
+    user_id = str.encode(pre_user_id)
+
+    if "Message" in data:
+        pre_message = data["Message"]
+        message = str.encode(pre_message)
 
         producer = KafkaProducer()
         producer.send(discussion_id, message, user_id)
@@ -204,7 +213,6 @@ def chat():
                 "message": msg.value
             }
         )
-
     return json.dumps(messages)
 
 
