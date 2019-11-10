@@ -5,6 +5,8 @@ from flask import Flask
 from flask import request, jsonify
 from flask_restful import Resource, Api
 from flask_cors import CORS
+from kafka import KafkaConsumer
+from kafka import KafkaProducer
 
 import googleapiclient.discovery
 import requests
@@ -181,9 +183,30 @@ def login():
 @app.route('/chat', methods=["POST", "GET"])
 def chat():
     data = request.get_json()
-    return jsonify("hi")
 
-# def process_queues():
+    discussion_id = data["DiscussionId"]
+    user_id = data["UserId"]
+
+    if request.method == "POST":
+        message = data["Message"]
+
+        producer = KafkaProducer()
+        producer.send(discussion_id, message, user_id)
+
+    consumer = KafkaConsumer(discussion_id)
+
+    messages = []
+
+    for msg in consumer:
+        messages.append(
+            {
+                "user": msg.key,
+                "message": msg.value
+            }
+        )
+
+    return json.dumps(messages)
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
