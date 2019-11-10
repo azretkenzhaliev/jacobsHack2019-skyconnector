@@ -2,7 +2,7 @@ import json
 import os
 
 from flask import Flask
-from flask import request
+from flask import request, jsonify
 from flask_restful import Resource, Api
 from flask_cors import CORS
 
@@ -44,15 +44,16 @@ def next():
 
     return result
 
-@app.route('/chat', methods["POST", "GET"])
+
+@app.route('/chat', methods=["POST", "GET"])
 def chat():
     data = request.get_json()
 
     #send to rabbitmq queues
 
-    return "hi"
+    return jsonify("hi")
 
-def process_queues():
+# def process_queues():
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
