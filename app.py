@@ -10,6 +10,7 @@ import googleapiclient.discovery
 import requests
 
 import pika
+import pymongo
 
 
 app = Flask(__name__)
@@ -108,13 +109,50 @@ def next():
 
     return json.dumps(processed_data)
 
+def sign_in(mongoEntries, email, password):
+    query = {"email": email}
+    entry = mongoEntries.find(query)
+    if entry:
+        if password == entry["password"]:
+            return "Sign in successful"
+        else:
+            return "Incorrect password"
+    else:
+        return "Incorrect email"
+
+def sign_up(mongoEntries, email, password):
+    query = {"email": email}
+    entry = mongoEntries.find(query)
+    if entry:
+        return "Already signed up. Please try to sign in"
+    
+    new_entry = {"email": email, "password": password}
+    res = mongoEntries.insert_one(new_entry)
+    return "Sign up successful"
+    
+
+@app.route('/login', methods=["POST"])
+def login():
+    mongoclient = pymongo.MongoClient("mongodb://192.168.43.253:27017/")
+    mongoDB = mongoclient["mongodatabase"]
+    mongoEntries = mongoDB["users"]
+
+    data = request.get_json()
+    email = data["email"]
+    password = data["password"]
+    flag = data["flag"] #sign-in or sign-up
+
+    if flag == "sign-in":
+        status = sign_in(mongoEntries, email, password)
+    elif flag == "sign-up":
+        status = sign_up(mongoEntries, email, password)
+    
+    return status
+
 
 @app.route('/chat', methods=["POST", "GET"])
 def chat():
     data = request.get_json()
-
-    #send to rabbitmq queues
-
     return jsonify("hi")
 
 # def process_queues():

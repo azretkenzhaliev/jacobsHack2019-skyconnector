@@ -8,6 +8,8 @@ import format from 'date-fns/format';
 import BpkInput, { INPUT_TYPES, CLEAR_BUTTON_MODES } from 'bpk-component-input';
 import BpkTicket from 'bpk-component-ticket';
 import STYLES from './App.scss';
+import ReactDOM from "react-dom";
+import Authentication from "./Authentication";
 
 const c = className => STYLES[className] || 'UNKNOWN';
 
@@ -109,8 +111,10 @@ const inline_stub = {
   marginTop: '20px',
 };
 
-function authenticate(e) {
+function authenticate(e, discussion_id) {
   console.log(e);
+  console.log(discussion_id);
+  ReactDOM.render(React.createElement(Authentication), document.getElementById('root'));
 }
 
 function getFlightTicketsComponents(flightTickets) {
@@ -119,12 +123,11 @@ function getFlightTicketsComponents(flightTickets) {
     let flight = flightTickets[key];
     let destinationTime = Date.parse(flight["FlightDateTime"]);
     let duration = Date.parse(flight["FlightDateTime"]) - Date.parse(flight["FlightDateTime"]);
-    let href = "./authenticate/" + flight['DiscussionId'];
     let stub = (
       <div style={inline_stub}>
         {flight["Price"] + " Euro"}
         <br/>
-        <BpkLink href={href}>{flight['DiscussionId']}</BpkLink>
+        <BpkLink href='/#' onClick={() => authenticate(e, flight['DiscussionId'])}>{flight['DiscussionId']}</BpkLink>
       </div>
     );
 
