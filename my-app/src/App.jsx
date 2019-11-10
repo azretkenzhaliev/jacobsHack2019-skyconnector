@@ -210,6 +210,7 @@ class FlightForm extends React.Component {
         <BpkInput
           id="origin"
           type={INPUT_TYPES.text}
+          className ={c('App__BpkInput')}
           name="origin"
           value={this.state.originValue}
           onChange={(e) => {this.handleChange(e)}}
@@ -221,6 +222,7 @@ class FlightForm extends React.Component {
         <BpkInput
           id="destination"
           type={INPUT_TYPES.text}
+          className ={c('App__BpkInput')}
           name="destination"
           value={this.state.destinationValue}
           onChange={(e) => {this.handleChange(e)}}
@@ -231,6 +233,8 @@ class FlightForm extends React.Component {
         />
         <BpkDatepicker
           id="datepicker"
+          className={c("App__BpkDatepicker")}
+          style = {{marginLeft: 20em}}
           daysOfWeek={daysOfWeek}
           weekStartsOn={1}
           changeMonthLabel="Change month"
@@ -243,8 +247,11 @@ class FlightForm extends React.Component {
           onDateSelect={this.handleDateSelect}
           date={this.state.selectedDate}
         />
-        <BpkLoadingButton iconOnly onClick={this.handleSubmit.bind(this)}>
-          <span className="visually-hidden">Search Flights</span>
+        <BpkLoadingButton 
+        className={c("App__BpkLoadingButton")}
+        iconOnly onClick={this.handleSubmit.bind(this)}
+        >
+          <span>Search Flights</span>
         </BpkLoadingButton>
         {this.state.flightTickets}
       </div>
