@@ -22,11 +22,11 @@ const right = {
 function getOther (msg) {
   return (
     <BpkGridRow>
-      <BpkGridColumn width={1}></BpkGridColumn>
+      <BpkGridColumn width={1}>""</BpkGridColumn>
       <BpkGridColumn width={7}>
         {msg}
       </BpkGridColumn>
-      <BpkGridColumn width={4}></BpkGridColumn>
+      <BpkGridColumn width={4}>""</BpkGridColumn>
     </BpkGridRow>
   )
 }
@@ -34,11 +34,11 @@ function getOther (msg) {
 function getSelf (msg) {
   return (
     <BpkGridRow>
-      <BpkGridColumn width={19}></BpkGridColumn>
+      <BpkGridColumn width={9}>""</BpkGridColumn>
       <BpkGridColumn width={2}>
         {msg}
       </BpkGridColumn>
-      <BpkGridColumn width={1}></BpkGridColumn>
+      <BpkGridColumn width={1}>""</BpkGridColumn>
     </BpkGridRow>
   )
 }
@@ -120,20 +120,63 @@ class Chat extends React.Component {
   render () {
     return (
       <div>
-        {this.state.messages}
-        <div style={inline}>
-          <BpkInput
-            id="msg"
-            type={INPUT_TYPES.text}
-            name="msg"
-            value={this.state.message}
-            onChange={(e) => {this.handleChange(e)}}
-            placeholder="Message"
-          />
-        </div>
-        <div style={inline}>
-          <BpkButton featured={true} onClick={this.post_message.bind(this)}>Send</BpkButton>
-        </div>
+        <BpkGridContainer>
+          <BpkGridRow>
+            <BpkGridColumn width={9}></BpkGridColumn>
+            <BpkGridColumn width={2}>
+              {"Azamat: Hi there!"}
+            </BpkGridColumn>
+            <BpkGridColumn width={1}></BpkGridColumn>
+          </BpkGridRow>
+          <BpkGridRow>
+            <BpkGridColumn width={1}></BpkGridColumn>
+            <BpkGridColumn width={7}>
+              {"Azret: Hi :)"}
+            </BpkGridColumn>
+            <BpkGridColumn width={4}></BpkGridColumn>
+          </BpkGridRow>
+          <BpkGridRow>
+            <BpkGridColumn width={1}></BpkGridColumn>
+            <BpkGridColumn width={7}>
+              {"Alim: I have no baggage, so I can take yours~~"}
+            </BpkGridColumn>
+            <BpkGridColumn width={4}></BpkGridColumn>
+          </BpkGridRow>
+          <BpkGridRow>
+            <BpkGridColumn width={8}></BpkGridColumn>
+            <BpkGridColumn width={3}>
+              {"Azamat: Nice, I have a document to send to my mom"}
+            </BpkGridColumn>
+            <BpkGridColumn width={1}></BpkGridColumn>
+          </BpkGridRow>
+
+          <BpkGridRow>
+            <BpkGridColumn width={1}></BpkGridColumn>
+            <BpkGridColumn width={7}>
+              {"Alim: Cool, dm me @amanzholov_8"}
+            </BpkGridColumn>
+            <BpkGridColumn width={4}></BpkGridColumn>
+          </BpkGridRow>
+
+
+          <BpkGridRow>
+            <BpkGridColumn width={1}></BpkGridColumn>
+            <BpkGridColumn width={8}>
+              <BpkInput
+                id="msg"
+                type={INPUT_TYPES.text}
+                name="msg"
+                value={this.state.message}
+                onChange={(e) => {this.handleChange(e)}}
+                placeholder="Message"
+              />
+            </BpkGridColumn>
+            <BpkGridColumn width={2}>
+              <BpkButton featured={true} onClick={this.post_message.bind(this)}>Send</BpkButton>
+            </BpkGridColumn>
+            <BpkGridColumn width={1}></BpkGridColumn>
+          </BpkGridRow>
+        </BpkGridContainer>
       </div>
     );
   }

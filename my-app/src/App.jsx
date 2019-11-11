@@ -120,13 +120,12 @@ function getFlightTicketsComponents(flightTickets) {
   let rows = [];
   for (let key in flightTickets){
     let flight = flightTickets[key];
-    let destinationTime = Date.parse(flight["FlightDateTime"]);
-    let duration = Date.parse(flight["FlightDateTime"]) - Date.parse(flight["FlightDateTime"]);
+    let destinationTime = Date.parse(flight["DepartureTime"]);
+    let arrivalTime = Date.parse(flight["ArrivalTime"]);
+    let duration = destinationTime - arrivalTime;
     let stub = (
       <div style={inline_stub}>
         {flight["Price"] + " Euro"}
-        <br/>
-        <BpkLink href='#' onClick={(e) => authenticate(e, flight['DiscussionId'])}>{flight['DiscussionId']}</BpkLink>
       </div>
     );
 
@@ -147,9 +146,10 @@ function getFlightTicketsComponents(flightTickets) {
           <div style={inline_right}>
             <BpkText>{flight["IataTo"]}</BpkText>
             <br/>
-            <BpkText>{formatTime(destinationTime)}</BpkText>
+            <BpkText>{formatTime(arrivalTime)}</BpkText>
           </div>
         </BpkTicket>
+        <BpkLink href='#' style={{marginLeft:20}} onClick={(e) => authenticate(e, flight['DiscussionId'])}>{flight['DiscussionId']}</BpkLink>
       </div>
     );
   }
