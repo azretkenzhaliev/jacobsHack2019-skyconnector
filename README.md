@@ -1,53 +1,11 @@
-# simple-flask-react-template
-# An application template in Python, Flask and ReactJS.
+# Skyconnector: An Easy Way To Connect With Flymates
 
-## Main Technologies:
-* Python
-* pip
-* Flask
-* Javascript
-* ReactJS
-* NPM
-* webpack
-* CSS
-* Docker
+Winner of JacobsHack 2019 Hackathon held in Bremen, Germany.
 
-## Building the application:
+https://devpost.com/software/skyconnector
 
-Option 1: python server  
-1) use pip to install the requirements of the server:  
-$ pip install -r requirements.txt  
-Obs.: I highly recommend to use a virtual env to avoid dependency conflicts.
+This is an initiative for providing an easy way for people on the same flights to instantly connect with each other. 
 
-2) change directory to static folder:  
-$ cd static
+Technologies used:
 
-3) install front end dependencies:  
-$ npm install  
-(dev-only):  
-$ npm i webpack --save-dev  
-$ npm i babel-core babel-loader babel-preset-es2015 babel-preset-react --save-dev  
-$ npm i react react-dom --save-dev
-
-4) build the front end:  
-$ npm run build  
-Obs.: You can use 'npm run watch' to avoid building the front end everytime a change is made.
-
-5) change to main directory:  
-$ cd ..
-
-6) run the server:  
-$ python server.py
-
-7) access via browser http://localhost:5000 and you are good to go :)
-
-
-Option 2: Docker  
-1) build the application:  
-$ docker-compose build
-
-2) run the server:  
-$ docker-compose up
-
-3) access via browser http://localhost:5000 and you are good to go :)
-
+We used Skyscanner API to fetch flight information to show to the users. We also used Skyscanner's open-source Backpack to add a little bit of styling to our website. We decided to use Flask for backend and React for frontend. We also used MongoDB to store data and Apache Kafka to simulate the messaging platform.
